@@ -1,0 +1,32 @@
+
+PUT request: https://fakerestapi.azurewebsites.netapi/v1/Books/1
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "1",
+  "title": "Book 1",
+  "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "pageCount": "100",
+  "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "publishDate": "NOW"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/1
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Sat, 02 Aug 2025 20:54:51 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-d7a6f74df19c3a489052c30ea097f203-1e13729f759ea644-00",
+    "errors": {
+        "$.publishDate": [
+            "The JSON value could not be converted to System.DateTime. Path: $.publishDate | LineNumber: 6 | BytePositionInLine: 22."
+        ]
+    }
+}

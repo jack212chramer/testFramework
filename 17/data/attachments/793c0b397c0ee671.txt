@@ -1,0 +1,25 @@
+
+GET request: https://fakerestapi.azurewebsites.netapi/v1/Books/%27+OR+1%3D1%3B--
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Params:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/%27+OR+1%3D1%3B--
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Sat, 02 Aug 2025 20:54:44 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-dad93fad7af1a548a8e9b5d901d2b130-dd3f078bbbc1f749-00",
+    "errors": {
+        "id": [
+            "The value '%27+OR+1%3D1%3B--' is not valid."
+        ]
+    }
+}
