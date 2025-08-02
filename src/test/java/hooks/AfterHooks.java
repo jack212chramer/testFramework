@@ -15,7 +15,7 @@ public class AfterHooks {
     public void doAfterEachScenario(Scenario scenario) {
         String log = "\n------------Api-calls----------------------------\n";
         log += StringUtils.join(apiActions.getApiHandler().getApiCalls(), "\n-------------------------------------------------\n");
-        scenario.log(log);
+//        scenario.log(log);
         if (scenario.isFailed()) {
             Allure.addAttachment("Console Log", log);
         }
