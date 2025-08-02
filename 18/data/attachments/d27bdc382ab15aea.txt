@@ -1,0 +1,17 @@
+
+------------Api-calls----------------------------
+
+DELETE request: https://fakerestapi.azurewebsites.netapi/v1/Books/-99
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Params:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/-99
+Status: 200
+Headers:
+[Content-Length=0, Date=Sat, 02 Aug 2025 21:10:07 GMT, Server=Kestrel, api-supported-versions=1.0]
+Body:
+
