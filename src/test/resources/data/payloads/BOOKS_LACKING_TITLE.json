@@ -1,7 +1,0 @@
-{
-  "id": "${id::-1}",
-  "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
-  "pageCount": "${pagecount::100}",
-  "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
-  "publishDate": "${publishdate::2025-08-01T14:26:57.0497392+00:00}"
-}
