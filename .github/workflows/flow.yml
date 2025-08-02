@@ -23,5 +23,11 @@ jobs:
       - name: Build with Maven
         run: mvn -B clean install
 
-      - name: Run Cucumber Tests
-        run: mvn test -Dtest=RegressionTestRunner -Dcucumber.options="--plugin pretty"
+      - name: Run tests and generate report
+        run: mvn -B verify -Dtest=RegressionTestRunner
+
+      - name: Upload Cucumber HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-html-report
+          path: target/cucumber-reports/
