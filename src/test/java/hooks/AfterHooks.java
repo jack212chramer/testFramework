@@ -5,6 +5,7 @@ import core.ApiHandler;
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.bs.A;
+import io.qameta.allure.Allure;
 import org.apache.commons.lang3.StringUtils;
 
 public class AfterHooks {
@@ -12,10 +13,12 @@ public class AfterHooks {
 
     @After
     public void doAfterEachScenario(Scenario scenario) {
-        scenario.log("\n------------Api-calls----------------------------\n");
-        scenario.log(StringUtils.join(apiActions.getApiHandler().getApiCalls(), "\n-------------------------------------------------\n"));
-        scenario.log("\n------------Remembered-params--------------------\n");
-        apiActions.getApiHandler().getRememberedParams().forEach((key, value) -> scenario.log(key + " = " + value));
+        String log = "\n------------Api-calls----------------------------\n";
+        log += StringUtils.join(apiActions.getApiHandler().getApiCalls(), "\n-------------------------------------------------\n");
+        scenario.log(log);
+        if (scenario.isFailed()) {
+            Allure.addAttachment("Console Log", log);
+        }
         ApiActions.resetInstance();
     }
 }
