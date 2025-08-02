@@ -10,6 +10,10 @@ import org.junit.platform.suite.api.*;
     "deprecated",
     "ignore"
 })
+@ConfigurationParameter(
+        key = "allure.results.directory",
+        value = "target/allure-results"
+)
 @ConfigurationParameter(key = "cucumber.plugin", value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
 public class RegressionTestRunner {
 }
