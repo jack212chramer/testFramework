@@ -1,0 +1,20 @@
+
+GET request: https://fakerestapi.azurewebsites.netapi/v1/Books/-1
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Params:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/-1
+Status: 404
+Headers:
+[Content-Type=application/problem+json; charset=utf-8; v=1.0, Date=Sat, 02 Aug 2025 20:40:21 GMT, Server=Kestrel, Transfer-Encoding=chunked, api-supported-versions=1.0]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-68751ea67065054da6275466b81a2d7c-49cdc0981f73ef4c-00"
+}
