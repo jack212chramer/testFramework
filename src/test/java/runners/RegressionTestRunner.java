@@ -14,6 +14,9 @@ import org.junit.platform.suite.api.*;
         key = "allure.results.directory",
         value = "target/allure-results"
 )
-@ConfigurationParameter(key = "cucumber.plugin", value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
+@ConfigurationParameter(
+        key = "cucumber.plugin",
+        value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
+)
 public class RegressionTestRunner {
 }

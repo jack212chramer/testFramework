@@ -2,6 +2,7 @@
 
 @reg @addBook @post
 Feature: Add Books API
+  This feature tests the Books API /api/v1/Books/${id} for adding new books.
 
   Scenario: Add new book
     Given I set params
@@ -12,6 +13,7 @@ Feature: Add Books API
     And response contains: pageCount with value 99
 
   Scenario: Add new book - empty payload
+    This scenario fails beecause the API does not validate if the body is empty.
     When I send POST request to: BOOKS with bodyfile EMPTY
     Then I receive response code 400
 
