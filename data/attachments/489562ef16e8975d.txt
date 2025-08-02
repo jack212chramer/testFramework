@@ -1,0 +1,29 @@
+
+POST request: https://fakerestapi.azurewebsites.netapi/v1/Books
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "10",
+  "title": "Book 1",
+  "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "pageCount": "100",
+  "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "publishDate": "2025-08-01T14:26:57.0497392+00:00"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books
+Status: 200
+Headers:
+[Content-Type=application/json; charset=utf-8; v=1.0, Date=Sat, 02 Aug 2025 20:23:33 GMT, Server=Kestrel, Transfer-Encoding=chunked, api-supported-versions=1.0]
+Body:
+{
+    "id": 10,
+    "title": "Book 1",
+    "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+    "pageCount": 100,
+    "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+    "publishDate": "2025-08-01T14:26:57.0497392+00:00"
+}
