@@ -48,10 +48,9 @@ jobs:
           path: allure-report
 
       - name: Deploy Reports to GitHub pages with History and Retries
-        uses: cybersokari/allure-deployer-action@v1.9.7
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
         with:
-          target: 'github'
-          github_pages_branch: 'gh-pages'
-          allure_results_path: 'allure-results'
-          show_history: 'true'
-          retries: 5
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: 'gh-pages'
+          publish_dir: 'allure-results'
