@@ -10,6 +10,6 @@ import org.junit.platform.suite.api.*;
     "deprecated",
     "ignore"
 })
-@ConfigurationParameter(key = "cucumber.plugin", value = "json:target/cucumber-reports/cucumber.json,html:target/cucumber-reports/cucumber-html.html")
+@ConfigurationParameter(key = "cucumber.plugin", value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
 public class RegressionTestRunner {
 }
