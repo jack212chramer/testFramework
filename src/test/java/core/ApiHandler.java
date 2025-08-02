@@ -8,13 +8,12 @@ import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,12 +24,14 @@ import static io.restassured.RestAssured.given;
 @Slf4j
 public class ApiHandler {
 
-    PayloadLoader payloadLoader = new PayloadLoader();
+    private final PayloadLoader payloadLoader = new PayloadLoader();
     private Endpoint endpoint;
     private Response response;
-    private List<Header> headers = getDefaultHeaders();
+    private final List<Header> headers = getDefaultHeaders();
     private final List<String> apiCalls = new ArrayList<>();
     private final Map<String, String> rememberedParams = new HashMap<>();
+    @Setter
+    private boolean encodePathParams = true;
 
     protected ApiHandler() {
         RestAssured.baseURI = "https://fakerestapi.azurewebsites.net";
@@ -43,7 +44,7 @@ public class ApiHandler {
 
     private String getEndpointUrl() {
         if (Objects.isNull(endpoint)) throw new IllegalStateException("Endpoint is not set");
-        return replaceRememberedParams(endpoint.getUrl(), true);
+        return replacePlaceholders(endpoint.getUrl(), encodePathParams);
     }
 
     private Response execute(Method method, RequestSpecification spec) {
@@ -64,7 +65,7 @@ public class ApiHandler {
     }
 
     public Response post(String body) {
-        body = replaceRememberedParams(body, false);
+        body = replacePlaceholders(body, false);
         String url = RestAssured.baseURI + getEndpointUrl();
         String reqLog = String.format(
                 "\nPOST request: %s\nHeaders:\n%s\nBody:\n%s\n",
@@ -81,7 +82,7 @@ public class ApiHandler {
     }
 
     public Response put(String body) {
-        body = replaceRememberedParams(body, false);
+        body = replacePlaceholders(body, false);
         String url = RestAssured.baseURI + getEndpointUrl();
         String reqLog = String.format(
                 "\nPUT request: %s\nHeaders:\n%s\nBody:\n%s\n",
@@ -98,7 +99,7 @@ public class ApiHandler {
     }
 
     public Response get(Map<String, String> params) {
-        replaceRememberedParams(params);
+        replacePlaceholders(params);
         String url = RestAssured.baseURI + getEndpointUrl();
         String reqLog = String.format(
                 "\nGET request: %s\nHeaders:\n%s\nParams:\n%s\n",
@@ -115,7 +116,7 @@ public class ApiHandler {
     }
 
     public Response delete(Map<String, String> params) {
-        replaceRememberedParams(params);
+        replacePlaceholders(params);
         String url = RestAssured.baseURI + getEndpointUrl();
         String reqLog = String.format(
                 "\nDELETE request: %s\nHeaders:\n%s\nParams:\n%s\n",
@@ -147,7 +148,7 @@ public class ApiHandler {
     // ${parameter_name} or ${parameter_name::default_value}
     private final Pattern pattern = Pattern.compile("\\$\\{([^}]+?)(?:::([^}]+))?}");
 
-    public Map<String, String> replaceRememberedParams(Map<String, String> input) {
+    public Map<String, String> replacePlaceholders(Map<String, String> input) {
         for (Map.Entry<String, String> entry : input.entrySet()) {
             StringBuilder output = new StringBuilder();
             Matcher matcher = pattern.matcher(entry.getValue());
@@ -169,7 +170,7 @@ public class ApiHandler {
         return input;
     }
 
-    public String replaceRememberedParams(String input, boolean urlEncode) {
+    public String replacePlaceholders(String input, boolean urlEncode) {
         Matcher matcher = pattern.matcher(input);
         StringBuilder result = new StringBuilder();
         while (matcher.find()) {

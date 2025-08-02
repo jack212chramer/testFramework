@@ -32,6 +32,7 @@ Feature: Get Books API
   Scenario: Get book by ID - sql injection
     Given I set params
       | id | ' OR 1=1;--  |
+    And I will not encode path parameters
     When I send GET request to BOOKS_ID
     Then I receive response code 400
     Then response matches schema ERROR

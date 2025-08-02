@@ -8,7 +8,6 @@ import core.PayloadLoader;
 import io.cucumber.java.pl.Wtedy;
 import org.junit.jupiter.api.Assertions;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +34,7 @@ public class VerificationSteps {
 
     @Wtedy("^response contains: (.+?) with value (.+?)$")
     public void responseContains(String value, String pattern) {
-        pattern = apiHandler.replaceRememberedParams(pattern, false);
+        pattern = apiHandler.replacePlaceholders(pattern, false);
         DocumentContext jsonContext = JsonPath.parse(apiHandler.getResponse().asString());
         String responseValue = jsonContext.read(value).toString();
         final Matcher matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(responseValue);
