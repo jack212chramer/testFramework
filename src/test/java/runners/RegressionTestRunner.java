@@ -1,18 +1,15 @@
 package runners;
 
-import org.junit.platform.suite.api.ExcludeTags;
-import org.junit.platform.suite.api.IncludeEngines;
-import org.junit.platform.suite.api.IncludeTags;
-import org.junit.platform.suite.api.SelectDirectories;
-import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.*;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectDirectories("target/test-classes/features")
+@SelectClasspathResource("features")
 @IncludeTags("reg")
 @ExcludeTags({
     "deprecated",
     "ignore"
 })
+@ConfigurationParameter(key = "cucumber.plugin", value = "json:target/cucumber-reports/cucumber.json,html:target/cucumber-reports/cucumber-html.html")
 public class RegressionTestRunner {
 }
