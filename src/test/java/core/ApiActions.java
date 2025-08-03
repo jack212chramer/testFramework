@@ -1,90 +1,198 @@
 package core;
 
-import com.jayway.jsonpath.JsonPath;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.http.Header;
+import io.restassured.http.Headers;
+import io.restassured.http.Method;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static io.restassured.RestAssured.given;
 
 @Getter
 @Slf4j
 public class ApiActions {
 
-    private static ApiActions instance;
-    public static ApiActions getInstance() {
-        if (instance == null) {
-            instance = new ApiActions();
+    private Endpoint endpoint;
+    private Response response;
+    private final List<Header> headers = getDefaultHeaders();
+    private final List<String> apiCalls = new ArrayList<>();
+    private final Map<String, String> rememberedParams = new HashMap<>();
+    @Setter
+    private boolean encodePathParams = true;
+
+    protected ApiActions() {
+        RestAssured.baseURI = "https://fakerestapi.azurewebsites.net";
+    }
+
+    public ApiActions setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
+        return this;
+    }
+
+    private String getEndpointUrl() {
+        if (Objects.isNull(endpoint)) throw new IllegalStateException("Endpoint is not set");
+        return replacePlaceholders(endpoint.getUrl(), encodePathParams);
+    }
+
+    private Response execute(Method method, RequestSpecification spec) {
+        String url = RestAssured.baseURI + getEndpointUrl();
+        Response res = spec.request(method, getEndpointUrl());
+
+        String respLog = String.format(
+                "\nResponse: %s\nStatus: %d\nHeaders:\n%s\nBody:\n%s\n",
+                url,
+                res.statusCode(),
+                res.headers().asList(),
+                res.asPrettyString()
+        );
+        log.info(respLog);
+        apiCalls.add(respLog);
+        this.response = res;
+        return res;
+    }
+
+    public Response post(String body) {
+        body = replacePlaceholders(body, false);
+        String url = RestAssured.baseURI + getEndpointUrl();
+        String reqLog = String.format(
+                "\nPOST request: %s\nHeaders:\n%s\nBody:\n%s\n",
+                url, headers, body
+        );
+        log.info(reqLog);
+        apiCalls.add(reqLog);
+
+        return execute(Method.POST,
+                given().contentType(ContentType.JSON)
+                        .headers(new Headers(headers))
+                        .body(body)
+        );
+    }
+
+    public Response put(String body) {
+        body = replacePlaceholders(body, false);
+        String url = RestAssured.baseURI + getEndpointUrl();
+        String reqLog = String.format(
+                "\nPUT request: %s\nHeaders:\n%s\nBody:\n%s\n",
+                url, headers, body
+        );
+        log.info(reqLog);
+        apiCalls.add(reqLog);
+
+        return execute(Method.PUT,
+                given().contentType(ContentType.JSON)
+                        .headers(new Headers(headers))
+                        .body(body)
+        );
+    }
+
+    public Response get(Map<String, String> queryParameters) {
+        replacePlaceholders(new HashMap<>(queryParameters));
+        String url = RestAssured.baseURI + getEndpointUrl();
+        String reqLog = String.format(
+                "\nGET request: %s\nHeaders:\n%s\nParams:\n%s\n",
+                url, headers, queryParameters
+        );
+        log.info(reqLog);
+        apiCalls.add(reqLog);
+
+        return execute(Method.GET,
+                given().headers(new Headers(headers))
+                        .params(queryParameters)
+                        .accept(ContentType.JSON)
+        );
+    }
+
+    public Response delete(Map<String, String> params) {
+        replacePlaceholders(params);
+        String url = RestAssured.baseURI + getEndpointUrl();
+        String reqLog = String.format(
+                "\nDELETE request: %s\nHeaders:\n%s\nParams:\n%s\n",
+                url, headers, params
+        );
+        log.info(reqLog);
+        apiCalls.add(reqLog);
+
+        return execute(Method.DELETE,
+                given().headers(new Headers(headers))
+                        .params(params)
+        );
+    }
+
+    public List<Header> getDefaultHeaders() {
+        return new ArrayList<>() {{
+                add(new Header("Accept", "*/*"));
+                add(new Header("Accept-Encoding", "gzip, deflate, br"));
+                add(new Header("Connection", "keep-alive"));
+            }};
+    }
+
+    public ApiActions rememberValue(String key, String value) {
+        log.info("Remembering value: {} = {}", key, value);
+        rememberedParams.put(key, value);
+        return this;
+    }
+
+    // ${parameter_name} or ${parameter_name::default_value}
+    private final Pattern pattern = Pattern.compile("\\$\\{([^}]+?)(?:::([^}]+))?}");
+
+    public Map<String, String> replacePlaceholders(Map<String, String> input) {
+        for (Map.Entry<String, String> entry : input.entrySet()) {
+            StringBuilder output = new StringBuilder();
+            Matcher matcher = pattern.matcher(entry.getValue());
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                String replacement = rememberedParams.get(key);
+                String defaultValue = matcher.group(2);
+                if (replacement != null) {
+                    matcher.appendReplacement(output, replacement);
+                } else if (defaultValue != null) {
+                    matcher.appendReplacement(output, defaultValue);
+                } else {
+                    throw new IllegalStateException("No remembered value for key: " + key);
+                }
+            }
+            matcher.appendTail(output);
+            input.put(entry.getKey(), output.toString());
         }
-        return instance;
+        return input;
     }
 
-    public static void resetInstance() {
-        instance = null;
-    }
-
-    private ApiActions() {
-        // Private constructor to enforce singleton pattern
-    }
-
-    private final ApiHandler apiHandler = new ApiHandler();
-
-    public void setParams(Map<String, String> unmodifiableParams) {
-        apiHandler.setParams(new HashMap<>(unmodifiableParams));
-    }
-
-    public void rememberResponseValue(String jsonPath) {
-        ensureResponse();
-        Object raw = JsonPath.parse(apiHandler.getResponse().asString()).read(jsonPath);
-        apiHandler.rememberValue(jsonPath, String.valueOf(raw));
-    }
-
-    public void rememberResponseValueWithName(String jsonPath, String name) {
-        ensureResponse();
-        Object raw = JsonPath.parse(apiHandler.getResponse().asString()).read(jsonPath);
-        apiHandler.rememberValue(name, String.valueOf(raw));
-    }
-
-    private void ensureResponse() {
-        if (apiHandler.getResponse() == null) {
-            throw new IllegalStateException("No response available. Send a request first.");
+    public String replacePlaceholders(String input, boolean urlEncode) {
+        Matcher matcher = pattern.matcher(input);
+        StringBuilder result = new StringBuilder();
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            String defaultValue = matcher.group(2);
+            String replacement = rememberedParams.getOrDefault(key, defaultValue);
+            if (Objects.isNull(replacement)) {
+                throw new IllegalStateException("No remembered value for key: " + key);
+            }
+            if (urlEncode) {
+                replacement = URLEncoder.encode(replacement, StandardCharsets.UTF_8);
+            }
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
         }
+        matcher.appendTail(result);
+        return result.toString();
     }
 
-    public void sendPostRequest(Endpoint endpoint) {
-        String body = apiHandler.getPayloadLoader().getPayload(endpoint);
-        apiHandler.setEndpoint(endpoint)
-                .post(body);
-    }
-
-    public void sendPostRequestWithBodyName(Endpoint endpoint, String bodyFile) {
-        apiHandler.setEndpoint(endpoint);
-        String body = apiHandler.getPayloadLoader().getPayload(bodyFile);
-        apiHandler.post(body);
-    }
-
-    public void sendGetRequest(Endpoint endpoint) {
-        apiHandler.setEndpoint(endpoint)
-                .get(Map.of());
-    }
-
-    public void sendGetRequestWithParams(Endpoint endpoint, Map<String, String> unmodifiableMap) {
-        apiHandler.setEndpoint(endpoint)
-                .get(new HashMap<>(unmodifiableMap));
-    }
-
-    public void sendDeleteRequest(Endpoint endpoint) {
-        apiHandler.setEndpoint(endpoint)
-                .delete(Map.of());
-    }
-
-    public void sendPutRequestWithBodyName(Endpoint endpoint, String bodyFile) {
-        apiHandler.setEndpoint(endpoint);
-        String body = apiHandler.getPayloadLoader().getPayload(bodyFile);
-        apiHandler.put(body);
-    }
-
-    public Endpoint getEndpoint(String endpoint) {
-        return PayloadLoader.getEndpointByName(endpoint);
+    public ApiActions setParams(Map<String, String> params) {
+        params = new HashMap<>(params);
+        //replace all null value with empty string
+        params.replaceAll((k, v) -> Objects.isNull(v) ? StringUtils.EMPTY : v);
+        rememberedParams.putAll(params);
+        return this;
     }
 }

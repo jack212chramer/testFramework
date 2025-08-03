@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static core.PayloadLoader.getPayload;
 import static core.PayloadLoader.loadSchema;
-import static core.endpoints.BooksEndpoint.BOOKS;
+import static core.endpoints.FakeRestApiEndpoints.BOOKS;
 import static dictionaries.MyConstants.ID;
 import static dictionaries.MyConstants.PAGECOUNT;
 import static dictionaries.MyConstants.PARSE_TO_DATETIME_ERROR_MESSAGE;

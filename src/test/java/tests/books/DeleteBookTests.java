@@ -10,9 +10,8 @@ import tests.BaseTest;
 import java.util.Map;
 
 import static core.PayloadLoader.loadSchema;
-import static core.endpoints.BooksEndpoint.BOOKS_ID;
+import static core.endpoints.FakeRestApiEndpoints.BOOKS_ID;
 import static dictionaries.MyConstants.*;
-import static dictionaries.MyConstants.PARSE_TO_INT_ERROR_MESSAGE;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 
 @Tag("DeleteBook")

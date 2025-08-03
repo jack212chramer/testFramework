@@ -10,8 +10,8 @@ import tests.BaseTest;
 
 import java.util.Map;
 
-import static core.endpoints.BooksEndpoint.BOOKS;
-import static core.endpoints.BooksEndpoint.BOOKS_ID;
+import static core.endpoints.FakeRestApiEndpoints.BOOKS;
+import static core.endpoints.FakeRestApiEndpoints.BOOKS_ID;
 import static dictionaries.MyConstants.ID;
 import static dictionaries.MyConstants.TITLE;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
