@@ -1,6 +1,5 @@
 package tests.books;
 
-import dictionaries.Schemas;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +17,10 @@ import static dictionaries.MyConstants.PAGECOUNT;
 import static dictionaries.MyConstants.PARSE_TO_DATETIME_ERROR_MESSAGE;
 import static dictionaries.MyConstants.PARSE_TO_INT_ERROR_MESSAGE;
 import static dictionaries.MyConstants.PUBLISH_DATE;
+import static dictionaries.Schemas.BOOKS_LACKING_TITLE;
+import static dictionaries.Schemas.BOOK_DETAILS;
+import static dictionaries.Schemas.EMPTY;
+import static dictionaries.Schemas.ERROR;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -35,7 +38,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.BOOK_DETAILS))))
+                .body(matchesJsonSchema(loadSchema(String.valueOf(BOOK_DETAILS))))
                 .and()
                 .body(PAGECOUNT, equalTo(99));
     }
@@ -45,7 +48,7 @@ public class AddBookTests extends BaseTest {
     @Description("This scenario fails beecause the API does not validate if the body is empty.")
     public void addNewBookEmptyPayload() {
         api.setEndpoint(BOOKS)
-                .post(getPayload(String.valueOf(Schemas.EMPTY)))
+                .post(getPayload(String.valueOf(EMPTY)))
                 .then()
                 .statusCode(400);
     }
@@ -55,12 +58,12 @@ public class AddBookTests extends BaseTest {
     public void addNewBookWithLackingTitle() {
         api.setEndpoint(BOOKS)
                 .setParams(Map.of(PAGECOUNT, "99"))
-                .post(getPayload(String.valueOf(Schemas.BOOKS_LACKING_TITLE)))
+                .post(getPayload(String.valueOf(BOOKS_LACKING_TITLE)))
                 .then()
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
     }
 
     @Test
@@ -73,7 +76,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
     }
 
     @Test
@@ -86,7 +89,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()
@@ -112,7 +115,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(409)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
     }
 
     @Test
@@ -125,7 +128,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()
@@ -142,7 +145,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()

@@ -1,6 +1,5 @@
 package tests.books;
 
-import dictionaries.Schemas;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -11,7 +10,8 @@ import java.util.Map;
 
 import static core.PayloadLoader.loadSchema;
 import static core.endpoints.FakeRestApiEndpoints.BOOKS_ID;
-import static dictionaries.MyConstants.*;
+import static dictionaries.MyConstants.ID;
+import static dictionaries.Schemas.ERROR;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 
 @Tag("DeleteBook")
@@ -36,7 +36,7 @@ public class DeleteBookTests extends BaseTest {
                 .then()
                 .statusCode(404)
                 .and()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class DeleteBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()

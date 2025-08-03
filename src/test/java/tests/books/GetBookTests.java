@@ -1,7 +1,6 @@
 package tests.books;
 
 import core.PayloadLoader;
-import dictionaries.Schemas;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -14,6 +13,9 @@ import static core.endpoints.FakeRestApiEndpoints.BOOKS;
 import static core.endpoints.FakeRestApiEndpoints.BOOKS_ID;
 import static dictionaries.MyConstants.ID;
 import static dictionaries.MyConstants.TITLE;
+import static dictionaries.Schemas.BOOK_DETAILS;
+import static dictionaries.Schemas.BOOK_LIST;
+import static dictionaries.Schemas.ERROR;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -31,7 +33,7 @@ public class GetBookTests extends BaseTest {
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(Schemas.BOOK_LIST))));
+                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(BOOK_LIST))));
     }
 
     @Test
@@ -44,7 +46,7 @@ public class GetBookTests extends BaseTest {
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(Schemas.BOOK_DETAILS))));
+                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(BOOK_DETAILS))));
     }
 
     @Test
@@ -57,7 +59,7 @@ public class GetBookTests extends BaseTest {
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(Schemas.BOOK_LIST))));
+                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(BOOK_LIST))));
     }
 
     @Test
@@ -70,7 +72,7 @@ public class GetBookTests extends BaseTest {
                 .statusCode(404)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(Schemas.ERROR))))
+                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(ERROR))))
                 .and()
                 .body(TITLE, equalTo("Not Found"));
     }
@@ -86,6 +88,6 @@ public class GetBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(Schemas.ERROR))));
+                .body(matchesJsonSchema(PayloadLoader.loadSchema(String.valueOf(ERROR))));
     }
 }
