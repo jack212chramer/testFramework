@@ -98,19 +98,19 @@ public class ApiHandler {
         );
     }
 
-    public Response get(Map<String, String> params) {
-        replacePlaceholders(params);
+    public Response get(Map<String, String> queryParameters) {
+        replacePlaceholders(new HashMap<>(queryParameters));
         String url = RestAssured.baseURI + getEndpointUrl();
         String reqLog = String.format(
                 "\nGET request: %s\nHeaders:\n%s\nParams:\n%s\n",
-                url, headers, params
+                url, headers, queryParameters
         );
         log.info(reqLog);
         apiCalls.add(reqLog);
 
         return execute(Method.GET,
                 given().headers(new Headers(headers))
-                        .params(params)
+                        .params(queryParameters)
                         .accept(ContentType.JSON)
         );
     }

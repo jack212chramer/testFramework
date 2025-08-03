@@ -24,10 +24,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn -B clean install
-
-      - name: Run tests and generate report
-        run: mvn verify -Dtest=RegressionTestRunner
+        run: mvn -B clean test
 
       - name: Get Allure history
         uses: actions/checkout@v2

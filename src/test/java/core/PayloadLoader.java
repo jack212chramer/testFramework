@@ -19,15 +19,15 @@ public class PayloadLoader {
     public static final String DATA_DIRECTORY = "src/test/resources/data";
     public static final String ENDPOINT_PACKAGE = "core.endpoints";
 
-    public String getPayload(Endpoint endpoint) {
+    public static String getPayload(Endpoint endpoint) {
         return getPayload(endpoint.getName());
     }
 
-    public String getPayload(String filename) {
+    public static String getPayload(String filename) {
         return loadPayloadFromFile(filename);
     }
 
-    private String loadPayloadFromFile(String filename) {
+    private static String loadPayloadFromFile(String filename) {
         File jsonPath = new File(DATA_DIRECTORY + "/payloads/" + filename + ".json");
         try {
             if (jsonPath.exists()) {
