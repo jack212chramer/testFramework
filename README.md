@@ -51,7 +51,7 @@ This project is a **sample framework** for automated REST API testing in Java, u
 
 ## Using dynamic parameters
 
-You can use param in json body or path param using this syntax: `${paramName}` or `${paramName::defaule_value}`.
+You can use param in json body or path param using this syntax: `${paramName}` or `${paramName::default_value}`.
 
 ---
 
