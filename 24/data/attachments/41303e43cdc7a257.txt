@@ -1,0 +1,37 @@
+
+------------Api-calls----------------------------
+
+PUT request: https://fakerestapi.azurewebsites.netapi/v1/Books/ABC
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "ABC",
+  "title": "Book 1",
+  "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "pageCount": "100",
+  "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "publishDate": "2025-08-01T14:26:57.0497392+00:00"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/ABC
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Mon, 04 Aug 2025 15:22:18 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-15f40f65bf08684994ebd64c01be5d77-9abb03d75790de4c-00",
+    "errors": {
+        "id": [
+            "The value 'ABC' is not valid."
+        ],
+        "$.id": [
+            "The JSON value could not be converted to System.Int32. Path: $.id | LineNumber: 1 | BytePositionInLine: 13."
+        ]
+    }
+}

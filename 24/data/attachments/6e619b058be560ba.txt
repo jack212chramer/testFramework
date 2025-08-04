@@ -1,0 +1,53 @@
+
+------------Api-calls----------------------------
+
+POST request: https://fakerestapi.azurewebsites.netapi/v1/Books
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "24862",
+  "title": "Book Title 24862",
+  "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "pageCount": "100",
+  "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "publishDate": "2025-08-01T14:26:57.0497392+00:00"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books
+Status: 200
+Headers:
+[Content-Type=application/json; charset=utf-8; v=1.0, Date=Mon, 04 Aug 2025 15:22:22 GMT, Server=Kestrel, Transfer-Encoding=chunked, api-supported-versions=1.0]
+Body:
+{
+    "id": 24862,
+    "title": "Book Title 24862",
+    "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+    "pageCount": 100,
+    "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+    "publishDate": "2025-08-01T14:26:57.0497392+00:00"
+}
+
+-------------------------------------------------
+
+GET request: https://fakerestapi.azurewebsites.netapi/v1/Books/24862
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Params:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/24862
+Status: 404
+Headers:
+[Content-Type=application/problem+json; charset=utf-8; v=1.0, Date=Mon, 04 Aug 2025 15:22:22 GMT, Server=Kestrel, Transfer-Encoding=chunked, api-supported-versions=1.0]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-d9c78e57f2bcc148ade076dce6d59e44-2e96b41ce9afe742-00"
+}

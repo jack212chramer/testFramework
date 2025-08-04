@@ -1,0 +1,35 @@
+
+------------Api-calls----------------------------
+
+PUT request: https://fakerestapi.azurewebsites.netapi/v1/Authors/ABC
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "ABC",
+  "idBook": "0",
+  "firstName": "Jan",
+  "lastName": "Kowalski"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Authors/ABC
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Mon, 04 Aug 2025 15:21:59 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-c3725b7e24980c4cb3ed7e4a231d11f5-c3953f47ed012d49-00",
+    "errors": {
+        "id": [
+            "The value 'ABC' is not valid."
+        ],
+        "$.id": [
+            "The JSON value could not be converted to System.Int32. Path: $.id | LineNumber: 1 | BytePositionInLine: 13."
+        ]
+    }
+}

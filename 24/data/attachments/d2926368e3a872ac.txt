@@ -1,0 +1,22 @@
+
+------------Api-calls----------------------------
+
+PUT request: https://fakerestapi.azurewebsites.netapi/v1/Authors
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "-1",
+  "idBook": "0",
+  "firstName": "Jan",
+  "lastName": "Kowalski"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Authors
+Status: 405
+Headers:
+[Content-Length=0, Date=Mon, 04 Aug 2025 15:22:03 GMT, Server=Kestrel, Allow=GET, POST]
+Body:
+
