@@ -55,4 +55,4 @@ You can use param in json body or path param using this syntax: `${paramName}` o
 
 ---
 
-> Framework is not thread safe because of singleton pattern used in ApiActions class. For parallel execution, consider using a different design pattern or refactor the code to avoid shared state.
+> Framework is not thread safe because of singleton pattern used in ApiHandler class. For parallel execution, consider using a different design pattern or refactor the code to avoid shared state.
