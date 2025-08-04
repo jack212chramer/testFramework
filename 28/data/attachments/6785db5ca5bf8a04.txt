@@ -1,0 +1,49 @@
+
+------------Api-calls----------------------------
+
+POST request: https://fakerestapi.azurewebsites.netapi/v1/Authors
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "11485",
+  "idBook": "10",
+  "firstName": "Jan",
+  "lastName": "Kowalski"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Authors
+Status: 200
+Headers:
+[Content-Type=application/json; charset=utf-8; v=1.0, Date=Mon, 04 Aug 2025 15:35:40 GMT, Server=Kestrel, Transfer-Encoding=chunked, api-supported-versions=1.0]
+Body:
+{
+    "id": 11485,
+    "idBook": 10,
+    "firstName": "Jan",
+    "lastName": "Kowalski"
+}
+
+-------------------------------------------------
+
+GET request: https://fakerestapi.azurewebsites.netapi/v1/Authors/11485
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Params:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Authors/11485
+Status: 404
+Headers:
+[Content-Type=application/problem+json; charset=utf-8; v=1.0, Date=Mon, 04 Aug 2025 15:35:40 GMT, Server=Kestrel, Transfer-Encoding=chunked, api-supported-versions=1.0]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-0850a74ba648634fbf3938feda0b0859-f554a35eaa30d342-00"
+}
