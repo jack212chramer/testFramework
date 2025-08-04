@@ -7,7 +7,7 @@ This project is a **sample framework** for automated REST API testing in Java, u
 - **Rest Assured** for API testing
 - **JUnit 5** for test management
 - **Allure** for test reporting
-- **GitHub Actions** for continuous integration and test automation
+- **GitHub Actions** for continuous integration
 
 ---
 
