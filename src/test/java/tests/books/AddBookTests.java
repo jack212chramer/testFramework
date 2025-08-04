@@ -11,18 +11,22 @@ import java.util.Map;
 
 import static core.PayloadLoader.getPayload;
 import static core.PayloadLoader.loadSchema;
-import static core.endpoints.FakeRestApiEndpoints.BOOKS;
+import static dictionaries.endpoints.FakeRestApiEndpoints.BOOKS;
+import static dictionaries.endpoints.FakeRestApiEndpoints.BOOKS_ID;
 import static dictionaries.MyConstants.ID;
 import static dictionaries.MyConstants.PAGECOUNT;
 import static dictionaries.MyConstants.PARSE_TO_DATETIME_ERROR_MESSAGE;
 import static dictionaries.MyConstants.PARSE_TO_INT_ERROR_MESSAGE;
 import static dictionaries.MyConstants.PUBLISH_DATE;
+import static dictionaries.MyConstants.TITLE;
 import static dictionaries.Schemas.BOOKS_LACKING_TITLE;
 import static dictionaries.Schemas.BOOK_DETAILS;
 import static dictionaries.Schemas.EMPTY;
 import static dictionaries.Schemas.ERROR;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
+import static java.lang.String.valueOf;
 import static org.hamcrest.Matchers.equalTo;
+import static utils.Helpers.getRandomNumber;
 
 @Tag("AddBook")
 @Tag("POST")
@@ -38,9 +42,30 @@ public class AddBookTests extends BaseTest {
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(BOOK_DETAILS))))
+                .body(matchesJsonSchema(loadSchema(valueOf(BOOK_DETAILS))))
                 .and()
                 .body(PAGECOUNT, equalTo(99));
+    }
+
+    @Test
+    @DisplayName("Add new book - persistence verification")
+    @Description("This scenario verifies if the book added in the previous test is persisted in the database." +
+            "I won't repeat such tests for every other endpoint because this api is not persistent.")
+    public void addNewBookPersistenceCheck() {
+        String uniqueId = valueOf(getRandomNumber(10000, 90000));
+        String title = "Book Title " + uniqueId;
+        api.setEndpoint(BOOKS)
+                .setParams(Map.of(ID, uniqueId, TITLE, title))
+                .post(getPayload(BOOKS))
+                .then()
+                .statusCode(200);
+        api.setEndpoint(BOOKS_ID)
+                .setParams(Map.of(ID, uniqueId))
+                .get(Map.of())
+                .then()
+                .statusCode(200)
+                .and()
+                .body(TITLE, equalTo(title));
     }
 
     @Test
@@ -48,7 +73,7 @@ public class AddBookTests extends BaseTest {
     @Description("This scenario fails beecause the API does not validate if the body is empty.")
     public void addNewBookEmptyPayload() {
         api.setEndpoint(BOOKS)
-                .post(getPayload(String.valueOf(EMPTY)))
+                .post(getPayload(valueOf(EMPTY)))
                 .then()
                 .statusCode(400);
     }
@@ -58,12 +83,12 @@ public class AddBookTests extends BaseTest {
     public void addNewBookWithLackingTitle() {
         api.setEndpoint(BOOKS)
                 .setParams(Map.of(PAGECOUNT, "99"))
-                .post(getPayload(String.valueOf(BOOKS_LACKING_TITLE)))
+                .post(getPayload(valueOf(BOOKS_LACKING_TITLE)))
                 .then()
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
     }
 
     @Test
@@ -76,7 +101,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
     }
 
     @Test
@@ -89,7 +114,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()
@@ -115,7 +140,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(409)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
     }
 
     @Test
@@ -128,7 +153,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()
@@ -145,7 +170,7 @@ public class AddBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()

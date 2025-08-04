@@ -10,8 +10,8 @@ import java.util.Map;
 
 import static core.PayloadLoader.getPayload;
 import static core.PayloadLoader.loadSchema;
-import static core.endpoints.FakeRestApiEndpoints.BOOKS;
-import static core.endpoints.FakeRestApiEndpoints.BOOKS_ID;
+import static dictionaries.endpoints.FakeRestApiEndpoints.BOOKS;
+import static dictionaries.endpoints.FakeRestApiEndpoints.BOOKS_ID;
 import static dictionaries.MyConstants.ID;
 import static dictionaries.MyConstants.PAGECOUNT;
 import static dictionaries.MyConstants.PARSE_TO_DATETIME_ERROR_MESSAGE;
@@ -23,6 +23,7 @@ import static dictionaries.Schemas.BOOK_DETAILS;
 import static dictionaries.Schemas.EMPTY;
 import static dictionaries.Schemas.ERROR;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
+import static java.lang.String.valueOf;
 import static org.hamcrest.Matchers.equalTo;
 
 @Tag("UpdateBook")
@@ -38,9 +39,25 @@ public class UpdateBookTests extends BaseTest {
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(BOOK_DETAILS))))
+                .body(matchesJsonSchema(loadSchema(valueOf(BOOK_DETAILS))))
                 .and()
                 .body(PAGECOUNT, equalTo(250));
+    }
+
+    @Test
+    @DisplayName("Update a book - case sensitive title")
+    public void updateBookTitleCaseSensitiveCheck() {
+        String title = "The Great Gatsby";
+        api.setEndpoint(BOOKS_ID)
+                .setParams(Map.of(ID, "1", TITLE, title))
+                .put(getPayload(BOOKS))
+                .then()
+                .statusCode(200)
+                .and()
+                .assertThat()
+                .body(matchesJsonSchema(loadSchema(valueOf(BOOK_DETAILS))))
+                .and()
+                .body(TITLE, equalTo(title));
     }
 
     @Test
@@ -48,7 +65,7 @@ public class UpdateBookTests extends BaseTest {
     public void updateBookEmptyPayload() {
         api.setEndpoint(BOOKS_ID)
                 .setParams(Map.of(ID, "1"))
-                .put(getPayload(String.valueOf(EMPTY)))
+                .put(getPayload(valueOf(EMPTY)))
                 .then()
                 .statusCode(400);
     }
@@ -58,12 +75,12 @@ public class UpdateBookTests extends BaseTest {
     public void updateBookWithLackingTitle() {
         api.setEndpoint(BOOKS_ID)
                 .setParams(Map.of(ID, "1"))
-                .put(getPayload(String.valueOf(BOOKS_LACKING_TITLE)))
+                .put(getPayload(valueOf(BOOKS_LACKING_TITLE)))
                 .then()
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
     }
 
     @Test
@@ -76,7 +93,7 @@ public class UpdateBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()
@@ -93,7 +110,7 @@ public class UpdateBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
     }
 
     @Test
@@ -126,7 +143,7 @@ public class UpdateBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()
@@ -143,7 +160,24 @@ public class UpdateBookTests extends BaseTest {
                 .statusCode(400)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(ERROR))));
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
+        Assertions.assertTrue(api.getResponse()
+                .body()
+                .asString()
+                .contains(PARSE_TO_DATETIME_ERROR_MESSAGE), "Response does not contain " + PARSE_TO_DATETIME_ERROR_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Update a book - non existing publish date")
+    public void updateBookWithNonExistingPublishDate() {
+        api.setEndpoint(BOOKS_ID)
+                .setParams(Map.of(ID, "1", PUBLISH_DATE, "2025-02-30T14:26:57.0497392+00:00"))
+                .put(getPayload(BOOKS))
+                .then()
+                .statusCode(400)
+                .and()
+                .assertThat()
+                .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
                 .body()
                 .asString()
@@ -153,15 +187,16 @@ public class UpdateBookTests extends BaseTest {
     @Test
     @DisplayName("Update a book - weird ascii characters in title")
     public void updateBookWithWeirdAsciiCharactersInTitle() {
+        String title = "🌈@';";
         api.setEndpoint(BOOKS_ID)
-                .setParams(Map.of(ID, "1", TITLE, "🌈@';"))
+                .setParams(Map.of(ID, "1", TITLE, title))
                 .put(getPayload(BOOKS))
                 .then()
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(String.valueOf(BOOK_DETAILS))))
+                .body(matchesJsonSchema(loadSchema(valueOf(BOOK_DETAILS))))
                 .and()
-                .body(TITLE, equalTo("🌈@';"));
+                .body(TITLE, equalTo(title));
     }
 }

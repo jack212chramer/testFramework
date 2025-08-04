@@ -1,4 +1,4 @@
-package tests.books;
+package tests.authors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -9,20 +9,20 @@ import tests.BaseTest;
 import java.util.Map;
 
 import static core.PayloadLoader.loadSchema;
-import static dictionaries.endpoints.FakeRestApiEndpoints.BOOKS_ID;
 import static dictionaries.MyConstants.ID;
 import static dictionaries.MyConstants.INVALID_VALUE_ERROR_MESSAGE;
 import static dictionaries.Schemas.ERROR;
+import static dictionaries.endpoints.FakeRestApiEndpoints.AUTHORS_ID;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 import static java.lang.String.valueOf;
 
-@Tag("DeleteBook")
+@Tag("DeleteAuthor")
 @Tag("DELETE")
-public class DeleteBookTests extends BaseTest {
+public class DeleteAuthorTests extends BaseTest {
     @Test
-    @DisplayName("Delete a book")
+    @DisplayName("Delete an author")
     public void deleteBook() {
-        api.setEndpoint(BOOKS_ID)
+        api.setEndpoint(AUTHORS_ID)
                 .setParams(Map.of(ID, "1"))
                 .delete(Map.of())
                 .then()
@@ -30,9 +30,9 @@ public class DeleteBookTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Delete a book with non existing ID")
-    public void deleteBookWithNonExistingId() {
-        api.setEndpoint(BOOKS_ID)
+    @DisplayName("Delete an author with non existing ID")
+    public void deleteAuthorWithNonExistingId() {
+        api.setEndpoint(AUTHORS_ID)
                 .setParams(Map.of(ID, "-99"))
                 .delete(Map.of())
                 .then()
@@ -42,10 +42,10 @@ public class DeleteBookTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Delete a book with incorrect ID format")
-    public void deleteBookWithIncorrectIdFormat() {
+    @DisplayName("Delete an author with incorrect ID format")
+    public void deleteAuthorWithIncorrectIdFormat() {
         String invalidParam = "ABC";
-        api.setEndpoint(BOOKS_ID)
+        api.setEndpoint(AUTHORS_ID)
                 .setParams(Map.of(ID, invalidParam))
                 .delete(Map.of())
                 .then()

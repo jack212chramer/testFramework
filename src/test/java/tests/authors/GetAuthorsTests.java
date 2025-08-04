@@ -1,4 +1,4 @@
-package tests.books;
+package tests.authors;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.Assertions;
@@ -10,66 +10,68 @@ import tests.BaseTest;
 import java.util.Map;
 
 import static core.PayloadLoader.loadSchema;
-import static dictionaries.MyConstants.*;
-import static dictionaries.endpoints.FakeRestApiEndpoints.BOOKS;
-import static dictionaries.endpoints.FakeRestApiEndpoints.BOOKS_ID;
-import static dictionaries.Schemas.BOOK_DETAILS;
-import static dictionaries.Schemas.BOOK_LIST;
+import static dictionaries.MyConstants.ID;
+import static dictionaries.MyConstants.INVALID_VALUE_ERROR_MESSAGE;
+import static dictionaries.MyConstants.SQL_INJECTION_PAYLOAD_EXAMPLE;
+import static dictionaries.MyConstants.TITLE;
+import static dictionaries.Schemas.AUTHOR_DETAILS;
+import static dictionaries.Schemas.AUTHOR_LIST;
 import static dictionaries.Schemas.ERROR;
+import static dictionaries.endpoints.FakeRestApiEndpoints.AUTHORS;
+import static dictionaries.endpoints.FakeRestApiEndpoints.AUTHORS_ID;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static org.hamcrest.Matchers.equalTo;
 
-@Tag("GetBook")
+@Tag("GetAuthors")
 @Tag("GET")
-public class GetBookTests extends BaseTest {
+public class GetAuthorsTests extends BaseTest {
 
     @Test
-    @DisplayName("Get Book List")
-    @Description("Test to retrieve the list of books and validate the response schema.")
-    public void getBookList() {
-        api.setEndpoint(BOOKS)
+    @DisplayName("Get Authors List")
+    public void getAuthorsList() {
+        api.setEndpoint(AUTHORS)
                 .get(Map.of())
                 .then()
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(valueOf(BOOK_LIST))));
+                .body(matchesJsonSchema(loadSchema(valueOf(AUTHOR_LIST))));
     }
 
     @Test
-    @DisplayName("Get book by ID")
-    public void getBookById() {
+    @DisplayName("Get author by ID")
+    public void getAuthorById() {
         api.setParams(Map.of(ID, "1"))
-                .setEndpoint(BOOKS_ID)
+                .setEndpoint(AUTHORS_ID)
                 .get(Map.of())
                 .then()
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(valueOf(BOOK_DETAILS))));
+                .body(matchesJsonSchema(loadSchema(valueOf(AUTHOR_DETAILS))));
     }
 
     @Test
-    @DisplayName("Get book by ID in query param instead of path param")
-    @Description("Test to retrieve a book by ID using query parameters instead of path parameters - the param should be ignored and list of books should be returned.")
-    public void getBookByQueryParam() {
-        api.setEndpoint(BOOKS)
+    @DisplayName("Get author by ID in query param instead of path param")
+    @Description("Test to retrieve an author by ID using query parameters instead of path parameters - the param should be ignored and list of authors should be returned.")
+    public void getAuthorByQueryParam() {
+        api.setEndpoint(AUTHORS)
                 .get(Map.of(ID, "1"))
                 .then()
                 .statusCode(200)
                 .and()
                 .assertThat()
-                .body(matchesJsonSchema(loadSchema(valueOf(BOOK_LIST))));
+                .body(matchesJsonSchema(loadSchema(valueOf(AUTHOR_LIST))));
     }
 
     @Test
-    @DisplayName("Get book by null ID")
-    public void getBookByNullId() {
+    @DisplayName("Get author by null ID")
+    public void getAuthorByNullId() {
         String invalidParameter = "null";
         api.setParams(Map.of(ID, invalidParameter))
-                .setEndpoint(BOOKS_ID)
+                .setEndpoint(AUTHORS_ID)
                 .get(Map.of())
                 .then()
                 .statusCode(400)
@@ -77,17 +79,17 @@ public class GetBookTests extends BaseTest {
                 .assertThat()
                 .body(matchesJsonSchema(loadSchema(valueOf(ERROR))));
         Assertions.assertTrue(api.getResponse()
-                .body()
-                .asString()
-                .contains(format(INVALID_VALUE_ERROR_MESSAGE, invalidParameter)),
+                        .body()
+                        .asString()
+                        .contains(format(INVALID_VALUE_ERROR_MESSAGE, invalidParameter)),
                 "Response does not contain " + format(INVALID_VALUE_ERROR_MESSAGE, invalidParameter));
     }
 
     @Test
-    @DisplayName("Get book by non existing ID")
-    public void getBookByNonExistingId() {
+    @DisplayName("Get author by non existing ID")
+    public void getAuthorByNonExistingId() {
         api.setParams(Map.of(ID, "-1"))
-                .setEndpoint(BOOKS_ID)
+                .setEndpoint(AUTHORS_ID)
                 .get(Map.of())
                 .then()
                 .statusCode(404)
@@ -99,10 +101,10 @@ public class GetBookTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Get book by invalid ID")
-    public void getBookByInvalidId() {
+    @DisplayName("Get author by invalid ID")
+    public void getAuthorByInvalidId() {
         api.setParams(Map.of(ID, "true"))
-                .setEndpoint(BOOKS_ID)
+                .setEndpoint(AUTHORS_ID)
                 .get(Map.of())
                 .then()
                 .statusCode(400)
@@ -112,11 +114,11 @@ public class GetBookTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Get book by ID - sql injection")
-    public void getBookByIdSqlInjection() {
+    @DisplayName("Get author by ID - sql injection")
+    public void getAuthorByIdSqlInjection() {
         api.setEncodePathParams(false);
         api.setParams(Map.of(ID, SQL_INJECTION_PAYLOAD_EXAMPLE))
-                .setEndpoint(BOOKS_ID)
+                .setEndpoint(AUTHORS_ID)
                 .get(Map.of())
                 .then()
                 .statusCode(400)

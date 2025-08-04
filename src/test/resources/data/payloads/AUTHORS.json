@@ -1,0 +1,6 @@
+{
+  "id": "${id::-1}",
+  "idBook": "${idBook::0}",
+  "firstName": "${firstName::Jan}",
+  "lastName": "${lastName::Kowalski}"
+}
