@@ -1,0 +1,22 @@
+
+------------Api-calls----------------------------
+
+POST request: https://fakerestapi.azurewebsites.netapi/v1/Authors
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Authors
+Status: 200
+Headers:
+[Content-Type=application/json; charset=utf-8; v=1.0, Date=Mon, 04 Aug 2025 15:25:30 GMT, Server=Kestrel, Transfer-Encoding=chunked, api-supported-versions=1.0]
+Body:
+{
+    "id": 0,
+    "idBook": 0,
+    "firstName": null,
+    "lastName": null
+}
