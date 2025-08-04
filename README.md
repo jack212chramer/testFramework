@@ -1,5 +1,3 @@
-# Add Books API Testing Project
-
 # Java API Testing Framework
 
 This project is a **sample framework** for automated REST API testing in Java, using:
