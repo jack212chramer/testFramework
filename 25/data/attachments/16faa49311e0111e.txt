@@ -1,0 +1,27 @@
+
+------------Api-calls----------------------------
+
+DELETE request: https://fakerestapi.azurewebsites.netapi/v1/Books/ABC
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Params:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/ABC
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Mon, 04 Aug 2025 15:24:54 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-c9a55b2267f87d4d8c20ed5812f5bf06-c1fbe9fbc111194c-00",
+    "errors": {
+        "id": [
+            "The value 'ABC' is not valid."
+        ]
+    }
+}
