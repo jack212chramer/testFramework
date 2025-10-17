@@ -5,16 +5,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ApiHandler {
 
-    private static ApiHandler instance;
+    private static volatile ApiHandler instance;
+
     public static ApiHandler getInstance() {
-        if (instance == null) {
-            instance = new ApiHandler();
+        ApiHandler localInstance = instance;
+        if (localInstance == null) {
+            synchronized (ApiHandler.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    localInstance = new ApiHandler();
+                    instance = localInstance;
+                }
+            }
         }
-        return instance;
+        return localInstance;
     }
 
     public static void resetInstance() {
-        instance = null;
+        synchronized (ApiHandler.class) {
+            instance = null;
+        }
     }
 
     private ApiHandler() {
