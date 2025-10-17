@@ -7,7 +7,6 @@ import io.restassured.http.Headers;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import java.util.regex.Pattern;
 
 import static io.restassured.RestAssured.given;
 
-@Getter
 @Slf4j
 public class ApiActions {
 
@@ -98,35 +96,39 @@ public class ApiActions {
     }
 
     public Response get(Map<String, String> queryParameters) {
-        replacePlaceholders(new HashMap<>(queryParameters));
+        Map<String, String> processedParams = Objects.isNull(queryParameters)
+                ? Collections.emptyMap()
+                : replacePlaceholders(queryParameters);
         String url = RestAssured.baseURI + getEndpointUrl();
         String reqLog = String.format(
                 "\nGET request: %s\nHeaders:\n%s\nParams:\n%s\n",
-                url, headers, queryParameters
+                url, headers, processedParams
         );
         log.info(reqLog);
         apiCalls.add(reqLog);
 
         return execute(Method.GET,
                 given().headers(new Headers(headers))
-                        .params(queryParameters)
+                        .params(processedParams)
                         .accept(ContentType.JSON)
         );
     }
 
     public Response delete(Map<String, String> params) {
-        replacePlaceholders(params);
+        Map<String, String> processedParams = Objects.isNull(params)
+                ? Collections.emptyMap()
+                : replacePlaceholders(params);
         String url = RestAssured.baseURI + getEndpointUrl();
         String reqLog = String.format(
                 "\nDELETE request: %s\nHeaders:\n%s\nParams:\n%s\n",
-                url, headers, params
+                url, headers, processedParams
         );
         log.info(reqLog);
         apiCalls.add(reqLog);
 
         return execute(Method.DELETE,
                 given().headers(new Headers(headers))
-                        .params(params)
+                        .params(processedParams)
         );
     }
 
@@ -148,25 +150,37 @@ public class ApiActions {
     private final Pattern pattern = Pattern.compile("\\$\\{([^}]+?)(?:::([^}]+))?}");
 
     public Map<String, String> replacePlaceholders(Map<String, String> input) {
+        if (Objects.isNull(input) || input.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, String> resolved = new LinkedHashMap<>(input.size());
         for (Map.Entry<String, String> entry : input.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (value == null) {
+                resolved.put(key, null);
+                continue;
+            }
+
             StringBuilder output = new StringBuilder();
-            Matcher matcher = pattern.matcher(entry.getValue());
+            Matcher matcher = pattern.matcher(value);
             while (matcher.find()) {
-                String key = matcher.group(1);
-                String replacement = rememberedParams.get(key);
+                String placeholderKey = matcher.group(1);
+                String replacement = rememberedParams.get(placeholderKey);
                 String defaultValue = matcher.group(2);
                 if (replacement != null) {
-                    matcher.appendReplacement(output, replacement);
+                    matcher.appendReplacement(output, Matcher.quoteReplacement(replacement));
                 } else if (defaultValue != null) {
-                    matcher.appendReplacement(output, defaultValue);
+                    matcher.appendReplacement(output, Matcher.quoteReplacement(defaultValue));
                 } else {
-                    throw new IllegalStateException("No remembered value for key: " + key);
+                    throw new IllegalStateException("No remembered value for key: " + placeholderKey);
                 }
             }
             matcher.appendTail(output);
-            input.put(entry.getKey(), output.toString());
+            resolved.put(key, output.toString());
         }
-        return input;
+        return Collections.unmodifiableMap(resolved);
     }
 
     public String replacePlaceholders(String input, boolean urlEncode) {
@@ -194,5 +208,13 @@ public class ApiActions {
         params.replaceAll((k, v) -> Objects.isNull(v) ? StringUtils.EMPTY : v);
         rememberedParams.putAll(params);
         return this;
+    }
+
+    public Response getResponse() {
+        return response;
+    }
+
+    public List<String> getApiCalls() {
+        return List.copyOf(apiCalls);
     }
 }
