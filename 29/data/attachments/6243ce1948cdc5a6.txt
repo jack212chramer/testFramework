@@ -1,0 +1,34 @@
+
+------------Api-calls----------------------------
+
+POST request: https://fakerestapi.azurewebsites.netapi/v1/Books
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "A",
+  "title": "Book 1",
+  "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "pageCount": "100",
+  "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "publishDate": "2025-08-01T14:26:57.0497392+00:00"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Fri, 17 Oct 2025 17:56:08 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-7c3e67841dab034ba0fa4472935a5d16-c3c0f4a03b6b0049-00",
+    "errors": {
+        "$.id": [
+            "The JSON value could not be converted to System.Int32. Path: $.id | LineNumber: 1 | BytePositionInLine: 11."
+        ]
+    }
+}

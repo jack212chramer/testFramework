@@ -1,0 +1,27 @@
+
+------------Api-calls----------------------------
+
+GET request: https://fakerestapi.azurewebsites.netapi/v1/Books/true
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Params:
+{}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Books/true
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Fri, 17 Oct 2025 17:56:00 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-a12a41865912ce47b740fafc36e0d262-122782bf3e0e4741-00",
+    "errors": {
+        "id": [
+            "The value 'true' is not valid."
+        ]
+    }
+}

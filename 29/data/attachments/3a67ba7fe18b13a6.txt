@@ -1,0 +1,32 @@
+
+------------Api-calls----------------------------
+
+PUT request: https://fakerestapi.azurewebsites.netapi/v1/Authors/1
+Headers:
+[Accept=*/*, Accept-Encoding=gzip, deflate, br, Connection=keep-alive]
+Body:
+{
+  "id": "1",
+  "idBook": "ABC",
+  "firstName": "Jan",
+  "lastName": "Kowalski"
+}
+
+-------------------------------------------------
+
+Response: https://fakerestapi.azurewebsites.netapi/v1/Authors/1
+Status: 400
+Headers:
+[Content-Type=application/problem+json; charset=utf-8, Date=Fri, 17 Oct 2025 17:55:57 GMT, Server=Kestrel, Transfer-Encoding=chunked]
+Body:
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-5e40bb47b7912a4c81e562d3ef62cdf8-1c47f1a43e27f645-00",
+    "errors": {
+        "$.idBook": [
+            "The JSON value could not be converted to System.Int32. Path: $.idBook | LineNumber: 2 | BytePositionInLine: 17."
+        ]
+    }
+}
